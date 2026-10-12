@@ -1,6 +1,6 @@
 [package]
 name = "ohce"
-version = "0.1.0" # change with html_root_url in lib.rs
+version = "0.1.1" # change with html_root_url in lib.rs
 edition = "2024"
 authors = ["nomissbowling <nomissbowling@yahoo.co.jp>"]
 
@@ -9,8 +9,8 @@ keywords = ["directx", "opengl", "windows", "graphics", "3D"]
 categories = ["simulation", "rendering", "science", "external-ffi-bindings"]
 license = "MIT"
 
-documentation = "https://docs.rs/echo/"
-homepage = "https://crates.io/crates/echo"
+documentation = "https://docs.rs/ohce/"
+homepage = "https://crates.io/crates/ohce"
 repository = "https://github.com/nomissbowling/ohce"
 
 readme = "README.md"
