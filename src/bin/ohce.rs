@@ -9,7 +9,7 @@
 
 use ohce::core::*;
 
-use crossterm::{QueueableCommand, style::{self, Stylize}};
+use crossterm::{QueueableCommand, style::{self, Stylize, Color}}; // ResetColor
 
 use std::{result::Result, error::Error};
 use std::io::{self, Write};
@@ -18,20 +18,25 @@ use std::io::{self, Write};
 pub fn ohce_proc_ascii(f: Feed) -> Result<(), Box<dyn Error>> {
   let r = reverse(f.s);
   print!("{}{}", r, lf(f.lf));
+  io::stdout().flush()?;
   // eprint!("{}{}", lu_reverse_ascii(r), lf(f.lf));
   io::stderr().queue(style::PrintStyledContent(
     format!("{}{}", lu_reverse_ascii(r), lf(f.lf)).dark_magenta()))?;
+  // io::stderr().queue(ResetColor)?; // needless when use PrintStyledContent
   io::stderr().flush()?;
   Ok(())
 }
 
 /// ohce_proc
 pub fn ohce_proc(f: Feed) -> Result<(), Box<dyn Error>> {
+  let orange = Color::Rgb{r: 240, g: 192, b: 32};
   let r = reverse(f.s);
   print!("{}{}", r, lf(f.lf));
+  io::stdout().flush()?;
   // eprint!("{}{}", lu_reverse(r), lf(f.lf));
   io::stderr().queue(style::PrintStyledContent(
-    format!("{}{}", lu_reverse(r), lf(f.lf)).red()))?;
+    format!("{}{}", lu_reverse(r), lf(f.lf)).with(orange)))?;
+  // io::stderr().queue(ResetColor)?; // needless when use PrintStyledContent
   io::stderr().flush()?;
   Ok(())
 }
