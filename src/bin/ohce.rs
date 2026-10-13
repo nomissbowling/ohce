@@ -16,13 +16,14 @@ use std::io::{self, Write};
 
 /// ohce_proc_ascii
 pub fn ohce_proc_ascii(f: Feed) -> Result<(), Box<dyn Error>> {
+  let aq = Color::Rgb{r: 32, g: 192, b: 240};
   let r = reverse(f.s);
   print!("{}{}", r, lf(f.lf));
   io::stdout().flush()?;
   // eprint!("{}{}", lu_reverse_ascii(r), lf(f.lf));
-  io::stderr().queue(style::PrintStyledContent(
-    format!("{}{}", lu_reverse_ascii(r), lf(f.lf)).dark_magenta()))?;
+  io::stderr().queue(style::PrintStyledContent(lu_reverse_ascii(r).with(aq)))?;
   // io::stderr().queue(ResetColor)?; // needless when use PrintStyledContent
+  if f.lf { eprint!("{}", '\n'); }
   io::stderr().flush()?;
   Ok(())
 }
@@ -34,9 +35,9 @@ pub fn ohce_proc(f: Feed) -> Result<(), Box<dyn Error>> {
   print!("{}{}", r, lf(f.lf));
   io::stdout().flush()?;
   // eprint!("{}{}", lu_reverse(r), lf(f.lf));
-  io::stderr().queue(style::PrintStyledContent(
-    format!("{}{}", lu_reverse(r), lf(f.lf)).with(orange)))?;
+  io::stderr().queue(style::PrintStyledContent(lu_reverse(r).with(orange)))?;
   // io::stderr().queue(ResetColor)?; // needless when use PrintStyledContent
+  if f.lf { eprint!("{}", '\n'); }
   io::stderr().flush()?;
   Ok(())
 }
