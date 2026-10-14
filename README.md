@@ -24,6 +24,14 @@ Build (bins)
 - cargo build --bins --release
 - cargo build --bin ohce --release
 - cat resource/sample.txt | target/release/ohce
+- cat resource/sample.txt | target/release/ohce -o resource/sample_out.txt
+
+- --so-col=<RRGGBB (hex color)> : RGB color for stdout
+- --se-col=<RRGGBB (hex color)> : RGB color for stderr
+- -c --color : with color
+- -e --error : with stderr
+- -o --output=FILE : output to file
+- -a --append : append mode (use with --output)
 
 
 License
