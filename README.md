@@ -32,6 +32,7 @@ Build (bins)
 - -e --error : with stderr
 - -o --output=FILE : output to file
 - -a --append : append mode (use with --output)
+- -p --port : with TCP port
 
 
 License

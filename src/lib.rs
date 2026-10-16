@@ -1,10 +1,11 @@
-#![doc(html_root_url = "https://docs.rs/ohce/0.1.4")]
+#![doc(html_root_url = "https://docs.rs/ohce/0.2.0")]
 //! reverse echo
 //!
 
 // #![feature(gen_blocks)] // must use Nightly
 
 pub mod core;
+pub mod net;
 
 /// test with [-- --nocapture] or [-- --show-output]
 #[cfg(test)]
