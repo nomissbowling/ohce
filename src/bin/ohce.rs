@@ -1,9 +1,13 @@
 //! ohce.rs
 //!
+//! # Build (bins)
+//!
 //! - cargo build --bins --release
 //! - cargo build --bin ohce --release
 //! - cat resource/sample.txt | target/release/ohce
 //! - cat resource/sample.txt | target/release/ohce -o resource/sample_out.txt
+//!
+//! # Options
 //!
 //! - --so-col=&lt;RRGGBB (hex color)&gt; : RGB color for stdout
 //! - --se-col=&lt;RRGGBB (hex color)&gt; : RGB color for stderr
@@ -11,7 +15,7 @@
 //! - -e --error : with stderr
 //! - -o --output=FILE : output to file
 //! - -a --append : append mode (use with --output)
-//! - -p --port : with TCP port
+//! - -p --port=PORT : with TCP port
 //!
 
 // #![feature(gen_blocks)] // must use Nightly
@@ -58,8 +62,9 @@ pub struct Opts {
   #[bpaf(short, long)]
   append: bool,
   /// with TCP port
-  #[bpaf(short, long)]
-  port: bool,
+  #[bpaf(short, long, argument("PORT"), fallback(0),
+    guard(check_port, "--port=PORT can not set listener"))]
+  port: u16,
   /// verbose (use with --debug)
   #[bpaf(external(verbose))]
   verbose: usize,
@@ -73,6 +78,11 @@ pub fn verbose() -> impl Parser<usize> {
   bpaf::short('v').long("verbose").help("verbose -v or -vv (use with --debug)")
     .req_flag(()).many().map(|xs| xs.len())
     .guard(|&x| x <= 2, "verbose <= 2")
+}
+
+/// guard check_port
+pub fn check_port(_p: &u16) -> bool {
+  true // now always true, check listener "localhost:{*p}"
 }
 
 /// guard check_output
@@ -176,11 +186,11 @@ pub fn main() -> Result<(), Box<dyn Error>> {
     if op.verbose < 1 { return Ok(()); }
   }
   let mut handles = vec![];
-  if op.port {
+  if op.port > 0 {
     let dbg = op.debug && op.verbose > 1;
     let host = "127.0.0.1";
-    let port = 23123;
-    handles.push(tcp::handle_server(dbg, b".", tcp::client_echo, host, port));
+    let port = op.port;
+    handles.push(tcp::thread_server(dbg, b".", tcp::handler_echo, host, port));
   }
   if let Some(bw) = open_output(&op.output, op.append) { drop(bw); } // release
 
@@ -196,7 +206,7 @@ pub fn main() -> Result<(), Box<dyn Error>> {
   for f in v { ohce_proc(&op, f, lu_rev)?; }
 */
 
-  if op.port {
+  if op.port > 0 {
     for h in handles {
       let _ = h.join().expect("join");
     }

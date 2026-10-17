@@ -8,8 +8,8 @@ use std::thread;
 use std::sync::mpsc;
 use std::time::Duration;
 
-/// client_echo
-pub fn client_echo(dbg: bool, ec: &'static [u8], stream: TcpStream) ->
+/// handler_echo
+pub fn handler_echo(dbg: bool, ec: &'static [u8], stream: TcpStream) ->
   Result<(), Box<dyn Error>> {
   let mut br = io::BufReader::new(&stream); // (stream.try_clone()?);
   let mut bw = io::BufWriter::new(&stream); // (stream);
@@ -25,9 +25,9 @@ pub fn client_echo(dbg: bool, ec: &'static [u8], stream: TcpStream) ->
   Ok(())
 }
 
-/// handle_server
-pub fn handle_server(dbg: bool, ec: &'static [u8],
-  client: fn (bool, &'static [u8], TcpStream) -> Result<(), Box<dyn Error>>,
+/// thread_server
+pub fn thread_server(dbg: bool, ec: &'static [u8],
+  handler: fn (bool, &'static [u8], TcpStream) -> Result<(), Box<dyn Error>>,
   host: &'static str, port: u16) ->
   thread::JoinHandle<io::Result<()>> {
   thread::spawn(move || -> io::Result<()> {
@@ -47,7 +47,7 @@ pub fn handle_server(dbg: bool, ec: &'static [u8],
         stream.set_nonblocking(false)?; // ignore listener blocking mode
         let ctx = tx.clone(); // clone to move (ctx will be dropped by closure)
         thread::spawn(move || {
-          if let Err(e) = client(dbg, ec, stream) {
+          if let Err(e) = handler(dbg, ec, stream) {
             if e.to_string().as_bytes() == ec { ctx.send(ec).expect("send"); }
             else { if dbg { eprintln!("Error handling client: {}", e); } }
           }

@@ -26,13 +26,17 @@ Build (bins)
 - cat resource/sample.txt | target/release/ohce
 - cat resource/sample.txt | target/release/ohce -o resource/sample_out.txt
 
+
+Options
+-------
+
 - --so-col=<RRGGBB (hex color)> : RGB color for stdout
 - --se-col=<RRGGBB (hex color)> : RGB color for stderr
 - -c --color : with color
 - -e --error : with stderr
 - -o --output=FILE : output to file
 - -a --append : append mode (use with --output)
-- -p --port : with TCP port
+- -p --port=PORT : with TCP port
 
 
 License
