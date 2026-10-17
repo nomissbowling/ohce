@@ -1,4 +1,4 @@
-#![doc(html_root_url = "https://docs.rs/ohce/0.2.2")]
+#![doc(html_root_url = "https://docs.rs/ohce/0.2.3")]
 //! reverse echo
 //!
 
@@ -6,12 +6,13 @@
 
 pub mod core;
 pub mod net;
+pub mod ext;
 
 /// test with [-- --nocapture] or [-- --show-output]
 #[cfg(test)]
 mod tests {
   use std::{result::Result, error::Error};
-  use super::core::*;
+  use super::{core::*, ext::*};
   use prayterm::{PrayTerm, Rgb};
   use crossterm::style::Color;
 
@@ -20,6 +21,13 @@ mod tests {
   fn test_core() -> Result<(), Box<dyn Error>> {
     let u8s = b"abc\n".to_vec();
     assert_eq!(format!("[{}]", trim_crlf_u8s(u8s)?), "[abc]");
+    Ok(())
+  }
+
+  /// test server client
+  #[test]
+  fn test_server_client() -> Result<(), Box<dyn Error>> {
+    assert_eq!(server_client_test("127.0.0.1", 23123, "end.", ".")?, ());
     Ok(())
   }
 

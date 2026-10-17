@@ -5,7 +5,7 @@
 //! - cargo build --bins --release
 //! - cargo build --bin ohce --release
 //! - cat resource/sample.txt | target/release/ohce
-//! - cat resource/sample.txt | target/release/ohce -o resource/sample_out.txt
+//! - cat resource/sample.txt | target/release/ohce --output resource/sample_out.txt
 //!
 //! # Options
 //!
@@ -13,10 +13,10 @@
 //! - --se-col=&lt;RRGGBB (hex color)&gt; : RGB color for stderr
 //! - -c --color : with color
 //! - -e --error : with stderr
-//! - -o --output=FILE : output to file
+//! - --output=FILE : output to file
 //! - -a --append : append mode (use with --output)
 //! - -p --port=PORT : with TCP port
-//! - -t --terminator=STR : close listener when received it (use with --port)
+//! - --terminator=STR : close listener when received it (use with --port)
 //!
 
 // #![feature(gen_blocks)] // must use Nightly
@@ -56,7 +56,7 @@ pub struct Opts {
   #[bpaf(short, long)]
   error: bool,
   /// output to file
-  #[bpaf(short, long, argument("FILE"), fallback("".into()),
+  #[bpaf(long, argument("FILE"), fallback("".into()),
     guard(check_output, "--output does not exist"))]
   output: PathBuf,
   /// append (use with --output)
@@ -67,7 +67,7 @@ pub struct Opts {
     guard(check_port, "--port=PORT can not set listener"))]
   port: u16,
   /// close listener when received it (use with --port)
-  #[bpaf(short, long, argument("STR"), fallback(".".into()))] // winsplit shlex
+  #[bpaf(long, argument("STR"), fallback(".".into()))] // winsplit shlex
   terminator: String,
   /// verbose (use with --debug)
   #[bpaf(external(verbose))]

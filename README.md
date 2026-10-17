@@ -24,7 +24,7 @@ Build (bins)
 - cargo build --bins --release
 - cargo build --bin ohce --release
 - cat resource/sample.txt | target/release/ohce
-- cat resource/sample.txt | target/release/ohce -o resource/sample_out.txt
+- cat resource/sample.txt | target/release/ohce --output resource/sample_out.txt
 
 
 Options
@@ -34,10 +34,10 @@ Options
 - --se-col=<RRGGBB (hex color)> : RGB color for stderr
 - -c --color : with color
 - -e --error : with stderr
-- -o --output=FILE : output to file
+- --output=FILE : output to file
 - -a --append : append mode (use with --output)
 - -p --port=PORT : with TCP port
-- -t --terminator=STR : close listener when received it (use with --port)
+- --terminator=STR : close listener when received it (use with --port)
 
 
 License
