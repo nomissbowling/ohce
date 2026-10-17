@@ -16,6 +16,7 @@
 //! - -o --output=FILE : output to file
 //! - -a --append : append mode (use with --output)
 //! - -p --port=PORT : with TCP port
+//! - -t --terminator=STR : close listener when received it (use with --port)
 //!
 
 // #![feature(gen_blocks)] // must use Nightly
@@ -65,6 +66,9 @@ pub struct Opts {
   #[bpaf(short, long, argument("PORT"), fallback(0),
     guard(check_port, "--port=PORT can not set listener"))]
   port: u16,
+  /// close listener when received it (use with --port)
+  #[bpaf(short, long, argument("STR"), fallback(".".into()))] // winsplit shlex
+  terminator: String,
   /// verbose (use with --debug)
   #[bpaf(external(verbose))]
   verbose: usize,
@@ -181,16 +185,17 @@ pub fn main() -> Result<(), Box<dyn Error>> {
   let op = opts().run(); // touch output file by guard check_output when set it
   if op.debug {
     println!("{:?}", op);
+    if op.verbose < 1 { return Ok(()); }
     println!("--nocapture: {}", op.nocapture); // (only for test)
     println!("--show-output: {}", op.show_output); // (only for test)
-    if op.verbose < 1 { return Ok(()); }
   }
   let mut handles = vec![];
   if op.port > 0 {
     let dbg = op.debug && op.verbose > 1;
-    let host = "127.0.0.1";
+    let ec = op.terminator.as_bytes().to_vec().into();
+    let host = "127.0.0.1".into();
     let port = op.port;
-    handles.push(tcp::thread_server(dbg, b".", tcp::handler_echo, host, port));
+    handles.push(tcp::thread_server(dbg, ec, tcp::handler_echo, host, port));
   }
   if let Some(bw) = open_output(&op.output, op.append) { drop(bw); } // release
 

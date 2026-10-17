@@ -37,6 +37,7 @@ Options
 - -o --output=FILE : output to file
 - -a --append : append mode (use with --output)
 - -p --port=PORT : with TCP port
+- -t --terminator=STR : close listener when received it (use with --port)
 
 
 License
