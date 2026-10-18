@@ -1,4 +1,4 @@
-#![doc(html_root_url = "https://docs.rs/ohce/0.2.3")]
+#![doc(html_root_url = "https://docs.rs/ohce/0.2.4")]
 //! reverse echo
 //!
 
