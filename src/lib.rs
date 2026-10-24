@@ -1,4 +1,4 @@
-#![doc(html_root_url = "https://docs.rs/ohce/0.2.4")]
+#![doc(html_root_url = "https://docs.rs/ohce/0.2.5")]
 //! reverse echo
 //!
 
@@ -21,6 +21,15 @@ mod tests {
   fn test_core() -> Result<(), Box<dyn Error>> {
     let u8s = b"abc\n".to_vec();
     assert_eq!(format!("[{}]", trim_crlf_u8s(u8s)?), "[abc]");
+    Ok(())
+  }
+
+  /// test esc sequence
+  #[test]
+  fn test_esc_sequence() -> Result<(), Box<dyn Error>> {
+    let dat = b"Hello \x1b[31;1mColor\n\x1b[0mNext Line\x1b[0m\n\nABC";
+    let o = "Hello Color\nNext Line\n\nABC";
+    assert_eq!(esc_sequence_test(dat, o)?, ());
     Ok(())
   }
 

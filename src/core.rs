@@ -1,6 +1,9 @@
 //! core.rs
 //!
 
+pub mod esc;
+pub use esc::*;
+
 // in lib.rs #![feature(gen_blocks)] // must use Nightly
 use genawaiter::rc::{Gen as Gen_, Co as Co_};
 
@@ -68,7 +71,7 @@ pub fn lf(b: bool) -> String {
 }
 
 /// trim_crlf
-pub fn trim_crlf(s: &String) -> String {
+pub fn trim_crlf(s: &str) -> String {
   s.trim_end_matches(['\r', '\n']).to_string()
 }
 

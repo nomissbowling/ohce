@@ -49,8 +49,11 @@ pub fn thread_client(dbg: bool, ec: Cow<'static, [u8]>,
           }
         }));
         let mut bw = io::BufWriter::new(&stream);
-        for r in irx { bw.write_all(format!("{}\n", r).as_bytes())?; } // block
-        bw.flush()?;
+        for r in irx { // block
+          bw.write_all(format!("{}\n", r).as_bytes())?;
+          bw.flush()?; // or io::LineWriter and writeln!(lw, r)?;
+        }
+        bw.flush()?; // just in case
         for h in handles {
           let _ = h.join().expect("join");
         }
